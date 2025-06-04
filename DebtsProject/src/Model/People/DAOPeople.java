@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model.People;
 import Model.Connector;
 import java.sql.*;
@@ -40,6 +36,32 @@ public class DAOPeople implements InterfacePep{
         System.err.println("Delete failed: " + e.getMessage());
         }
     }    
+   
+    @Override
+        
+    public ModelPeople getByName(String name) {
+        ModelPeople people = null;
+        try {
+            Connection conn = Connector.connect();
+            String query = "SELECT * FROM people WHERE nama = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                people = new ModelPeople();
+                people.setId(rs.getInt("id"));
+                people.setNama(rs.getString("nama"));
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("GetByName failed: " + e.getMessage());
+        }
+        return people;
+    }
+
 
     @Override
     public List<ModelPeople> getAll() {
@@ -65,7 +87,7 @@ public class DAOPeople implements InterfacePep{
         return listPipel;
         
     }
-
-
+    
+    
 
 }

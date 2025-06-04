@@ -1,25 +1,8 @@
 package View;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 public class Viewer extends javax.swing.JFrame {
-
-public JComboBox<String> getPemberiComboBox() {
-    return pemberi;
-}
-
-public JComboBox<String> getPenerimaComboBox() {
-    return penerima;
-}
-
-public JComboBox<String> setPemberiComboBox() {
-    return pemberi;
-}
-
-public JComboBox<String> setPenerimaComboBox() {
-    return penerima;
-}
 
 public void setNominal(String nominal){
     this.jTextField3.setText(nominal);
@@ -33,15 +16,31 @@ public void setNote(String note){
     this.jTextArea1.setText(note);
 }
 
-public String getNominalField() {
+public void setPenerima(String penerimaNama){
+    this.jTextField1.setText(penerimaNama);
+}
+
+public String getPenerimaName() {
+    return jTextField1.getText();
+}
+
+public void setPemberi(String pemberiNama){
+    this.jTextField2.setText(pemberiNama);
+}
+
+public String getPemberiName() {
+    return jTextField2.getText();
+}
+
+public String getNominal() {
     return jTextField3.getText();
 }
 
-public String getDateField() {
+public String getDate() {
     return jTextField6.getText();
 }
 
-public String getNoteArea() {
+public String getNote() {
     return jTextArea1.getText();
 }
     
@@ -49,13 +48,26 @@ public JButton getSimpelBtn(){
     return simpelbtn;
 }
 
+
 public JButton getDelBtn(){
     return delbtn;
 }
+
+public JButton getAddBtn(){
+    return addbtn;
+}
+
 public JTable getTable(){
     return jTable1;
 }
 
+public void clearForm(){
+        jTextField3.setText("");
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField6.setText("");
+        jTextArea1.setText("");
+}
 
     public Viewer() {
         initComponents();
@@ -75,14 +87,14 @@ public JTable getTable(){
         jTextField6 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        penerima = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         addbtn = new javax.swing.JButton();
         clrbtn = new javax.swing.JButton();
         delbtn = new javax.swing.JButton();
         simpelbtn = new javax.swing.JButton();
-        pemberi = new javax.swing.JComboBox<>();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Debt & Loan Sirkel");
@@ -112,14 +124,6 @@ public JTable getTable(){
         ));
         jTable1.setSelectionBackground(new java.awt.Color(255, 255, 204));
         jScrollPane1.setViewportView(jTable1);
-
-        penerima.setEditable(true);
-        penerima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        penerima.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                penerimaActionPerformed(evt);
-            }
-        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -155,11 +159,9 @@ public JTable getTable(){
             }
         });
 
-        pemberi.setEditable(true);
-        pemberi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        pemberi.addActionListener(new java.awt.event.ActionListener() {
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pemberiActionPerformed(evt);
+                jTextField1ActionPerformed(evt);
             }
         });
 
@@ -185,12 +187,11 @@ public JTable getTable(){
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel3))
                                         .addGap(24, 24, 24)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(penerima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(pemberi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField6)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                                    .addComponent(jTextField1)
+                                    .addComponent(jTextField2))
                                 .addGap(70, 70, 70))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
@@ -218,11 +219,11 @@ public JTable getTable(){
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(penerima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pemberi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,11 +265,7 @@ public JTable getTable(){
     }//GEN-LAST:event_addbtnActionPerformed
 
     private void clrbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clrbtnActionPerformed
-        jTextField3.setText("");
-        jTextField6.setText("");
-        jTextArea1.setText("");
-        pemberi.setSelectedIndex(0);
-        penerima.setSelectedIndex(0);
+       clearForm();
     }//GEN-LAST:event_clrbtnActionPerformed
 
     private void delbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delbtnActionPerformed
@@ -281,13 +278,9 @@ public JTable getTable(){
         this.dispose();
     }//GEN-LAST:event_simpelbtnActionPerformed
 
-    private void pemberiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pemberiActionPerformed
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_pemberiActionPerformed
-
-    private void penerimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_penerimaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_penerimaActionPerformed
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -337,11 +330,11 @@ public JTable getTable(){
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JComboBox<String> pemberi;
-    private javax.swing.JComboBox<String> penerima;
     private javax.swing.JButton simpelbtn;
     // End of variables declaration//GEN-END:variables
 }

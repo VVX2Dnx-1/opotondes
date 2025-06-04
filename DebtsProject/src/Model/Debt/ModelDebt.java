@@ -26,7 +26,7 @@ public class ModelDebt {
     }
 
     public ModelPeople getPemberi(){
-        return pemberi;
+        return this.pemberi;
     }
     
     public void setPemberi(ModelPeople pemberi){

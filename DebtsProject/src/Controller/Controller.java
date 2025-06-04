@@ -1,13 +1,13 @@
 package Controller;
 
-import View.Viewer;
-import java.util.List;
+import Model.*;
 import Model.Debt.*;
 import Model.People.*;
-import Model.*;
+import View.Viewer;
 import java.awt.HeadlessException;
-import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 public class Controller {
     private Viewer view;
@@ -19,16 +19,44 @@ public class Controller {
 
     public Controller(Viewer view){
         this.view = view;
-        this.daoPip = new DAOPeople();
+        this.intrP = new DAOPeople();
         this.intrD = new DAODebt();
+        
+        //loadPeopleData();
         loadTabel();
       
         view.getDelBtn().addActionListener((ActionEvent e) -> {
             deleteDebt();
         });      
-    
+        
+        view.getAddBtn().addActionListener((ActionEvent e) -> {
+            addDebt();
+        });
+        
+        
     }
     
+ //   private void loadPeopleData() {
+ //   try {
+ //       // Bersihkan combobox terlebih dahulu
+ //       view.getPemberiComboBox().removeAllItems();
+  //      view.getPenerimaComboBox().removeAllItems();
+ //       
+ //       // Ambil semua data people dari database
+ //       List<ModelPeople> peopleList = daoPip.getAll();
+ //       
+//        // Tambahkan ke combobox
+ //       for (ModelPeople person : peopleList) {
+ //           view.getPemberiComboBox().addItem(person.getNama());
+ //           view.getPenerimaComboBox().addItem(person.getNama());
+ //       }
+ //   } catch (Exception e) {
+ //       JOptionPane.showMessageDialog(view, 
+ //           "Gagal memuat data orang: " + e.getMessage(), 
+ //           "Error", 
+ //           JOptionPane.ERROR_MESSAGE);
+ //   }
+//    }
     
     private void loadTabel(){
         daftarDebt = intrD.getAll();
@@ -73,58 +101,72 @@ public class Controller {
     }
     
     
-    
-   private void addDebt(){
-       try {
-        String pemberiNama = (String) view.getPemberiComboBox().getSelectedItem();
-        String penerimaNama = (String) view.getPenerimaComboBox().getSelectedItem();
-        int nominal = Integer.parseInt(view.getNominalField());
-        String date = view.getDateField();
-        String note = view.getNoteArea();
-        
-        // Validasi input
-        if (pemberiNama.equals(penerimaNama)) {
-            JOptionPane.showMessageDialog(view, "Pemberi dan Penerima tidak boleh sama", 
-                "Error", JOptionPane.ERROR_MESSAGE);
+private void addDebt() {
+    try {
+        String penerimaName = view.getPenerimaName().trim();
+        String pemberiName = view.getPemberiName().trim();
+        String nominalText = view.getNominal().trim();
+        String date = view.getDate().trim();
+        String note = view.getNote().trim();
+
+        // Validasi wajib isi
+        if (penerimaName.isEmpty() || pemberiName.isEmpty() || nominalText.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Penerima, Pemberi, dan Nominal harus diisi!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
+        int nominal;
+        try {
+            nominal = Integer.parseInt(nominalText);
+            if (nominal <= 0) {
+                JOptionPane.showMessageDialog(view, "Nominal harus lebih dari 0!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(view, "Nominal harus berupa angka!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Cek atau insert pemberi
+        ModelPeople pemberi = intrP.getByName(pemberiName);
+        if (pemberi == null) {
+            pemberi = new ModelPeople();
+            pemberi.setNama(pemberiName);
+            intrP.insert(pemberi);
+            pemberi = intrP.getByName(pemberiName); // Ambil ulang untuk mendapatkan ID
+        }
+
+        // Cek atau insert penerima
+        ModelPeople penerima = intrP.getByName(penerimaName);
+        if (penerima == null) {
+            penerima = new ModelPeople();
+            penerima.setNama(penerimaName);
+            intrP.insert(penerima);
+            penerima = intrP.getByName(penerimaName); // Ambil ulang untuk mendapatkan ID
+        }
+
+        // Buat dan isi data utang
         ModelDebt debt = new ModelDebt();
-        debt.setPemberi(daoPip.getNama(pemberiNama));
-        debt.setPenerima(daoPip.getNama(penerimaNama));
+        debt.setPenerima(penerima);
+        debt.setPemberi(pemberi);
         debt.setNominal(nominal);
         debt.setDate(date);
         debt.setNote(note);
-        
+
+        // Simpan ke tabel debt
         intrD.insert(debt);
-        loadTabel();
-        
-        JOptionPane.showMessageDialog(view, "Data berhasil ditambahkan");
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(view, "Nominal harus angka", "Error", JOptionPane.ERROR_MESSAGE);
-        
+
+        JOptionPane.showMessageDialog(view, "Data utang berhasil ditambahkan.");
+        loadTabel();       // Refresh tabel
+        view.clearForm();  // Bersihkan input
+
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(view, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(view, "Terjadi kesalahan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-   }
 }
-    
- //  public void handleNewPersonInput(String nama){
- //      if (!isPersonExists(nama)) {
-  //      ModelPeople newPerson = new ModelPeople();
- //       newPerson.setNama(nama);
+
+
+}
         
- //       // Simpan ke database
- //       if (intrP.insert(newPerson)) {
-//            // Update JComboBox
- //           refreshPeopleComboBox();
-//        }
-//    }
-//       
- //  }
-//    
-//   private boolean isPersonExists(String nama) {
-//    return intrP.getAll().stream().anyMatch(p -> p.getNama().equalsIgnoreCase(nama));
-//    }
-//    
+    
 

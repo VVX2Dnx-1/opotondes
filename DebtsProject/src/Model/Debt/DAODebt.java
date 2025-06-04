@@ -9,25 +9,31 @@ public class DAODebt implements InterfaceDebt {
 
     @Override
     public void insert(ModelDebt debt) {
-        try{
-        String query = "INSERT INTO debt (pemberi_id, penerima_id, nominal, date, note) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement statement = Connector.connect().prepareStatement(query);
-        
-        // Set parameter values
-        statement.setInt(1, debt.getPemberi().getId());    // pemberi_id
-        statement.setInt(2, debt.getPenerima().getId());   // penerima_id
-        statement.setInt(3, debt.getNominal());            // nominal
-        statement.setString(4, debt.getDate());            // date
-        statement.setString(5, debt.getNote());            // note
-        //statement.setBoolean(6, debt.getStatus());
-        // Eksekusi query
-        statement.executeUpdate();
-        statement.close();
-        
-    } catch(SQLException e){
-        System.out.println("Gagal input: " + e.getLocalizedMessage());
-        }
+    if (debt.getPemberi() == null || debt.getPenerima() == null) {
+        throw new IllegalArgumentException("Pemberi dan Penerima tidak boleh null.");
     }
+
+    try {
+        String query = "INSERT INTO debt (pemberi_id, penerima_id, nominal, date, note) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = Connector.connect().prepareStatement(query)) {
+            statement.setInt(1, debt.getPemberi().getId());
+            statement.setInt(2, debt.getPenerima().getId());
+            statement.setInt(3, debt.getNominal());
+            statement.setString(4, debt.getDate());
+            statement.setString(5, debt.getNote());
+
+            int result = statement.executeUpdate();
+            if (result == 0) {
+                throw new SQLException("Insert debt gagal, tidak ada baris yang ditambahkan.");
+            }
+
+            System.out.println("[DEBUG] Insert debt sukses: " + result + " baris.");
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Gagal input debt: " + e.getMessage(), e);
+    }
+}
+
 
     @Override
     public void delete(int id) {
@@ -66,7 +72,7 @@ public class DAODebt implements InterfaceDebt {
                 debt.setNominal(rs.getInt("nominal"));
                 debt.setDate(rs.getString("date"));
                 debt.setNote(rs.getString("note"));
-                //debt.setStatus(rs.getBoolean("status"));
+              
                 
                 // Set pemberi
                 ModelPeople pemberi = new ModelPeople();
