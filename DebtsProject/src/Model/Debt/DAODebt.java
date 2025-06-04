@@ -19,7 +19,7 @@ public class DAODebt implements InterfaceDebt {
         statement.setInt(3, debt.getNominal());            // nominal
         statement.setString(4, debt.getDate());            // date
         statement.setString(5, debt.getNote());            // note
-        
+        //statement.setBoolean(6, debt.getStatus());
         // Eksekusi query
         statement.executeUpdate();
         statement.close();
@@ -30,17 +30,24 @@ public class DAODebt implements InterfaceDebt {
     }
 
     @Override
-    public void delete(ModelDebt debt) {
-     try {
-            String query = "DELETE FROM debt WHERE id = ?";
-            PreparedStatement statement = Connector.connect().prepareStatement(query);
-            statement.setInt(1, debt.getId());
-            statement.executeUpdate();
-            statement.close();
-        } catch(SQLException e) {
-            System.out.println("Gagal delete: " + e.getMessage());
+    public void delete(int id) {
+    String query = "DELETE FROM debt WHERE id = ?";
+    
+    try (Connection conn = Connector.connect();
+         PreparedStatement statement = conn.prepareStatement(query)) {
+        
+        statement.setInt(1, id);
+        int affectedRows = statement.executeUpdate();
+        
+        if (affectedRows == 0) {
+            throw new SQLException("No record found with ID: " + id);
         }
+        
+    } catch (SQLException e) {
+        System.out.println("Failed to delete: " + e.getMessage());
+        throw new RuntimeException("Database error while deleting", e);
     }
+}
 
     @Override
     public List<ModelDebt> getAll() {
@@ -59,6 +66,7 @@ public class DAODebt implements InterfaceDebt {
                 debt.setNominal(rs.getInt("nominal"));
                 debt.setDate(rs.getString("date"));
                 debt.setNote(rs.getString("note"));
+                //debt.setStatus(rs.getBoolean("status"));
                 
                 // Set pemberi
                 ModelPeople pemberi = new ModelPeople();

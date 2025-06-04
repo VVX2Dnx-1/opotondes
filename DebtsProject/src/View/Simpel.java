@@ -4,6 +4,8 @@
  */
 package View;
 
+import Controller.Controller;
+
 /**
  *
  * @author nx
@@ -101,6 +103,7 @@ public class Simpel extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Viewer view = new Viewer();
+        Controller control = new Controller(view);
         view.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

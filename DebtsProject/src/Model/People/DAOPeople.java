@@ -28,6 +28,18 @@ public class DAOPeople implements InterfacePep{
         }
        
     }
+    
+    @Override
+    public void delete(int id) {
+    String query = "DELETE FROM people WHERE id = ?";
+    try (Connection conn = Connector.connect();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, id);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        System.err.println("Delete failed: " + e.getMessage());
+        }
+    }    
 
     @Override
     public List<ModelPeople> getAll() {
@@ -53,5 +65,7 @@ public class DAOPeople implements InterfacePep{
         return listPipel;
         
     }
-    
+
+
+
 }

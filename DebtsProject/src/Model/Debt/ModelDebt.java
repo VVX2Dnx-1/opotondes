@@ -7,6 +7,7 @@ public class ModelDebt {
     private ModelPeople pemberi;
     private ModelPeople penerima;
     private String date, note;
+ //   private boolean statusDone;
     
     public int getId(){
         return id;
@@ -53,6 +54,14 @@ public class ModelDebt {
     public void setNote(String note){
         this.note = note;
     }
+    
+  //  public void setStatus(boolean statusDone){
+     //   this.statusDone = statusDone;
+    //}
+    
+    //public boolean getStatus(){
+      //  return this.statusDone;
+    //}
 
 
 }
