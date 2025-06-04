@@ -3,7 +3,7 @@ import java.util.List;
 import  Model.Debt.*;
 
 public class ModelTabel {
-    private List<ModelDebt> data;
+    private final List<ModelDebt> data;
     String kolom[] = {"ID", "Penerima", "Pemberi", "Nominal", "Waktu", "Keterangan"};
     
     public ModelTabel(List<ModelDebt> data){
@@ -24,8 +24,8 @@ public class ModelTabel {
             case 1 -> data.get(rowIndex).getPenerima();
             case 2 -> data.get(rowIndex).getPemberi();
             case 3 -> data.get(rowIndex).getNominal();
-            case 4 -> data.get(rowIndex).getNote();
-            case 5 -> data.get(rowIndex).getId();
+            case 4 -> data.get(rowIndex).getDate();
+            case 5 -> data.get(rowIndex).getNote();
             default -> null;
         };
                 
